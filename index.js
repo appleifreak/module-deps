@@ -9,8 +9,11 @@ var through = require('through');
 var concat = require('concat-stream');
 
 module.exports = function (mains, opts) {
+    var _ref;
+    
     if (!opts) opts = {};
     var cache = opts.cache;
+    var paths = (_ref = opts.paths) != null ? _ref : [];
     var pkgCache = opts.packageCache;
     
     if (!Array.isArray(mains)) mains = [ mains ].filter(Boolean);
@@ -37,7 +40,7 @@ module.exports = function (mains, opts) {
         if (--pending === 0) output.queue(null);
     }
     
-    var top = { id: '/', filename: '/', paths: [] };
+    var top = { id: '/', filename: '/', paths: paths };
     mains.forEach(function (main, ix) {
         if (typeof main === 'object') {
             walk({ stream: main, file: entries[ix] }, top);
