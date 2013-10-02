@@ -88,14 +88,8 @@ module.exports = function (mains, opts) {
         if (opts.modules) parent.modules = opts.modules;
         
         resolver(id, parent, function (err, file, pkg) {
-            if (err) return output.emit('error', err);
-            if (!file) return output.emit('error', new Error([
-                'module not found: "' + id + '" from file ',
-                parent.filename
-            ].join('')));
-            
             if (cb) cb(file);
-            if (visited[file]) {
+            if (err || file == null || visited[file]) {
                 if (--pending === 0) output.queue(null);
                 return;
             }
