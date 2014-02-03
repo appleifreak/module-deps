@@ -10,9 +10,12 @@ var concat = require('concat-stream');
 var parents = require('parents');
 
 module.exports = function (mains, opts) {
+    var _ref;
+    
     if (!opts) opts = {};
     var cache = opts.cache;
-    var pkgCache = opts.packageCache || {};
+    var paths = (_ref = opts.paths) != null ? _ref : [];
+    var pkgCache = opts.packageCache;
     
     if (!Array.isArray(mains)) mains = [ mains ].filter(Boolean);
     var basedir = opts.basedir || process.cwd();
@@ -38,7 +41,13 @@ module.exports = function (mains, opts) {
         if (--pending === 0) output.queue(null);
     }
     
-    var top = { id: '/', filename: '/', paths: [] };
+    var top = { id: '/', filename: '/', paths: paths };
+    mains.forEach(function (main, ix) {
+        if (typeof main === 'object') {
+            walk({ stream: main, file: entries[ix] }, top);
+        }
+        else walk(main, top)
+    });
     
     (function () {
         var pkgCount = mains.length;
