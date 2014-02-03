@@ -15,7 +15,7 @@ module.exports = function (mains, opts) {
     if (!opts) opts = {};
     var cache = opts.cache;
     var paths = (_ref = opts.paths) != null ? _ref : [];
-    var pkgCache = opts.packageCache;
+    var pkgCache = opts.packageCache || {};
     
     if (!Array.isArray(mains)) mains = [ mains ].filter(Boolean);
     var basedir = opts.basedir || process.cwd();
